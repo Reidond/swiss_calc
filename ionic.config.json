@@ -1,0 +1,7 @@
+{
+  "name": "expression_evaluate_ionic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
