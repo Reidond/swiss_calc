@@ -1,13 +1,13 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
+    <ion-header v-if="hideHeader" :translucent="true">
       <ion-toolbar>
         <ion-title>Swiss Calc</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
+      <ion-header v-if="hideHeader" collapse="condense">
         <ion-toolbar>
           <ion-title size="large">Swiss Calc</ion-title>
         </ion-toolbar>
@@ -15,13 +15,17 @@
 
       <div class="container">
         <ion-textarea
-          class="textarea"
+          class="textarea display-container"
           readonly
           v-model="textareaRef"
         ></ion-textarea>
-        <div class="actions-container">
+        <ion-grid :style="{ ...actionsContainerGridPadding }">
           <ion-row v-for="(r, i) in controlsRef" :key="`${r}${i}`">
-            <ion-col v-for="(c, ci) in r" :key="`${c}${ci}`">
+            <ion-col
+              v-for="(c, ci) in r"
+              :key="`${c}${ci}`"
+              :style="{ ...actionsContainerGridColPadding }"
+            >
               <ion-button
                 @click="onControlPress(c)"
                 expand="block"
@@ -31,7 +35,7 @@
               >
             </ion-col>
           </ion-row>
-        </div>
+        </ion-grid>
       </div>
     </ion-content>
   </ion-page>
@@ -48,8 +52,9 @@ import {
   IonRow,
   IonCol,
   IonButton,
+  IonGrid,
 } from "@ionic/vue";
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useSwissCalcCalculator } from "@/use/swisscalc_calculator.js";
 import {
   useDivisionOperator,
@@ -58,6 +63,7 @@ import {
   useAdditionOperator,
   usePercentOperator,
 } from "@/use/swisscalc_operator_cache.js";
+import { useScreenOrientation } from "@/use/screen_orientation.js";
 
 export default defineComponent({
   name: "Home",
@@ -71,6 +77,7 @@ export default defineComponent({
     IonRow,
     IonCol,
     IonButton,
+    IonGrid,
   },
   setup() {
     const textareaRef = ref("0");
@@ -91,6 +98,35 @@ export default defineComponent({
       equalsPressed,
       getMainDisplay,
     } = useSwissCalcCalculator();
+
+    const { screenOrientation, ORIENTATIONS } = useScreenOrientation();
+
+    const hideHeader = computed(() => {
+      return screenOrientation.value !== ORIENTATIONS.LANDSCAPE_PRIMARY;
+    });
+
+    const actionsContainerGridPadding = computed(() => {
+      if (!hideHeader.value) {
+        return {
+          "--ion-grid-column-padding": "2px",
+          "--ion-grid-padding": "2px",
+        };
+      }
+      return {
+        "--ion-grid-column-padding": "5px",
+        "--ion-grid-padding": "5px",
+      };
+    });
+
+    const actionsContainerGridColPadding = computed(() => {
+      if (!hideHeader.value) {
+        return {
+          "padding-top": "0px",
+          "padding-bottom": "0px",
+        };
+      }
+      return {};
+    });
 
     const onControlPress = (control) => {
       const actions = {
@@ -227,6 +263,9 @@ export default defineComponent({
       textareaRef,
       controlsRef,
       onControlPress,
+      actionsContainerGridPadding,
+      actionsContainerGridColPadding,
+      hideHeader,
     };
   },
 });
@@ -234,18 +273,23 @@ export default defineComponent({
 
 <style scoped>
 .textarea {
+  --padding-bottom: 0px;
   --padding-end: var(--padding-top);
   text-align: end;
   font-weight: normal;
   font-size: 24px;
+  margin-top: 0px;
+  margin-bottom: auto;
 }
 .container {
-  display: flex;
-  flex-flow: column;
-  min-height: calc(100vh - var(--offset-top));
+  flex: 1;
 }
-.actions-container {
-  min-height: 370px;
+.display-container {
+  flex: 1;
+  justify-content: flex-end;
+}
+ion-grid {
+  margin-inline: unset;
   margin-top: auto;
 }
 </style>
