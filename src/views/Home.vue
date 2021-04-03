@@ -79,7 +79,7 @@ export default defineComponent({
       ["7", "8", "9", "x"],
       ["4", "5", "6", "-"],
       ["1", "2", "3", "+"],
-      ["0", ",", "="],
+      ["0", ".", "="],
     ]);
 
     const {
@@ -149,6 +149,12 @@ export default defineComponent({
           },
         },
         "9": {
+          type: "digit",
+          action: () => {
+            addDigit(control);
+          },
+        },
+        ".": {
           type: "digit",
           action: () => {
             addDigit(control);
