@@ -1,7 +1,8 @@
 {
-  "name": "expression_evaluate_ionic",
+  "name": "swiss_calc",
   "version": "0.0.1",
   "private": true,
+  "module": "./src/use/index.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -9,6 +10,16 @@
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint"
   },
+  "files": [
+    "src/use/swisscalc_calculator.js",
+    "src/use/swisscalc_format.js",
+    "src/use/swisscalc_memory_display.js",
+    "src/use/swisscalc_numeric_display.js",
+    "src/use/swisscalc_operator_cache.js",
+    "src/use/swisscalc_operator.js",
+    "src/use/swisscalc_shunting_yard.js",
+    "src/index.js"
+  ],
   "dependencies": {
     "@capacitor/android": "^2.4.7",
     "@capacitor/core": "2.4.7",
@@ -37,6 +48,9 @@
     "eslint-plugin-vue": "^7.0.0-0",
     "typescript": "~3.9.3",
     "vue-jest": "^5.0.0-0"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0-0"
   },
   "description": "An Ionic project"
 }
